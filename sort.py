@@ -38,9 +38,9 @@ TRANSLIT = {
 def normalize(path, translit):
     """
     Transliterate filename to english, remove problem symbols
-    :param path: filename -> str
+    :param path: file's path -> Path
     :param translit: translit dict -> dict
-    :return: normalized file -> str
+    :return: normalized file -> Path
     """
     file = path.name
     ext = file[file.rfind('.'):]
@@ -80,7 +80,13 @@ def sort_groups(path):
     return NEW_FOLDERS, list(known_list), list(unknown_list)
 
 
-def create_dirs(path, folders):  # Функція абсолют не працює, замінити
+def create_dirs(path, folders):
+    """
+    Create folders and move files
+    :param path: user path -> Path
+    :param folders: dict with new folders and files -> dict
+    :return: None
+    """
     for key, files in folders.items():
         new_folder = path / key
         if not new_folder.exists():
@@ -102,8 +108,8 @@ def create_dirs(path, folders):  # Функція абсолют не працю
 def unpacker(archive):
     """
     Unpack archives
-    :param archive: path of archive -> Path()
-    :return: None
+    :param archive: path of archive -> Path
+    :return: folder -> Path
     """
     name = archive
     suffixes = len(name.suffixes)
@@ -118,7 +124,11 @@ def unpacker(archive):
 
 
 def delete_empty(path):
-
+    """
+    Delete empty folders
+    :param path: user path -> Path
+    :return: None
+    """
     for item in path.glob('**/*'):
         if item.is_dir():
             try:
@@ -128,6 +138,13 @@ def delete_empty(path):
 
 
 def readme(new_folders, known_list, unknown_list):
+    """
+    Create text file with description of results
+    :param new_folders: dict with new folders and files -> dict
+    :param known_list: list of known extensions -> list,
+    :param unknown_list: list of unknown extensions -> list
+    :return: None
+    """
     path = Path(user_path) / 'Sort_result.txt'
     with open(path, 'w') as result:
         result.write(f.renderText('EasySort'))
