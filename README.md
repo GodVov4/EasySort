@@ -4,7 +4,7 @@
 ## How use?
 **1. Open terminal in script folder**
 ### * for Unix/MacOS
-**2. Instal requirenments:**
+**2. Install requirements:**
 ```
 python -m pip install -r requirements.txt
 ```
@@ -12,7 +12,7 @@ python -m pip install -r requirements.txt
 
 For example `python3 sort.py /Users/Username/Downloads/Your_folder`
 ### * for Windows
-**2. Instal requirenments:**
+**2. Install requirements:**
 ```
 python -m pip install -r requirements.txt
 ```
