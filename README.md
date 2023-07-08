@@ -25,4 +25,4 @@ For example
 python sort.py C:\Users\Username\Desctop\Your_folder
 ```
 
-**4. Open** `Sort_result` **in your folder.**
+**4. Open** `SORT_RESULT` **in your folder.**
