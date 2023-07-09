@@ -47,16 +47,17 @@ def sort_groups(path):
     known_list = set()
     unknown_list = set()
     for file in path.glob('**/*'):
-        if file.is_file() and set(file.parts).isdisjoint(IGNORE_FOLDERS):
-            ext = str(file)[str(file).rfind('.')+1:]
-            for folder, ext_list in EXTENSIONS.items():
-                if ext.upper() in ext_list:
-                    NEW_FOLDERS[folder].append(normalize(file, TRANSLIT))
-                    known_list.add(ext.upper())
-                    break
-                elif folder == 'unknown':
-                    unknown_list.add(ext.upper())
-                    break
+        if file.is_dir() or not set(file.parts).isdisjoint(IGNORE_FOLDERS):
+            continue
+        ext = str(file)[str(file).rfind('.')+1:]
+        for folder, ext_list in EXTENSIONS.items():
+            if ext.upper() in ext_list:
+                NEW_FOLDERS[folder].append(normalize(file, TRANSLIT))
+                known_list.add(ext.upper())
+                break
+            elif folder == 'unknown':
+                unknown_list.add(ext.upper())
+                break
     return NEW_FOLDERS, list(known_list), list(unknown_list)
 
 
@@ -136,9 +137,9 @@ def readme(new_folders, known_list, unknown_list):
                 result.write(f'* In folder "{key}" was moved: {[i.name for i in value]}.\n')
         for key, value in new_folders.items():
             if key == 'archives':
-                result.write(f'* Your archives {[i.name for i in value]} was unpacked in folder "{key}".\n')
-        result.write(f'\n* Known extensions: {known_list}.\n')
-        result.write(f'\n* Unknown extensions: {unknown_list}.\n')
+                result.write(f'* Your archives {[i.name for i in value]} was unpacked in folder "{key}".\n\n')
+        result.write(f'* Known extensions: {known_list}.\n')
+        result.write(f'* Unknown extensions: {unknown_list}.\n')
         result.write('\n* Your files have been transliterated.\n')
         result.write('\n\nProduced in Ukraine by Volodymyr Martyn.\n')
 
