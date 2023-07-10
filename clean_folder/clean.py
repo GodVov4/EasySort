@@ -3,7 +3,7 @@ import shutil
 import sys
 from pathlib import Path
 from pyfiglet import Figlet
-from constants import NEW_FOLDERS, IGNORE_FOLDERS, EXTENSIONS, TRANSLIT
+from clean_folder.constants import NEW_FOLDERS, IGNORE_FOLDERS, EXTENSIONS, TRANSLIT
 
 
 f = Figlet(font='standard')
