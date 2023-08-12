@@ -3,7 +3,8 @@ import shutil
 import sys
 from pathlib import Path
 from pyfiglet import Figlet
-from constants import NEW_FOLDERS, IGNORE_FOLDERS, EXTENSIONS, TRANSLIT
+from transliterate import get_translit_function
+from constants import NEW_FOLDERS, IGNORE_FOLDERS, EXTENSIONS
 
 
 f = Figlet(font='standard')
@@ -17,18 +18,16 @@ if not user_path.exists():
     exit()
 
 
-def normalize(path, translit):
+def normalize(path: Path) -> Path:
     """
     Transliterate filename to english, remove problem symbols
-    :param path: file path -> Path
-    :param translit: translit dict -> dict
-    :return: normalized file -> Path
     """
     file = path.name
     ext = file[file.rfind('.'):]
     normalized_file = file.removesuffix(ext)
-    normalized_file = normalized_file.translate(translit)
     normalized_file = re.sub(r'\W', '_', normalized_file)
+    translit = get_translit_function('uk')
+    normalized_file = translit(normalized_file, reversed=True)
     normalized_file += ext
     new_path = path.parent / normalized_file
     if file != normalized_file:
@@ -36,10 +35,9 @@ def normalize(path, translit):
     return new_path
 
 
-def sort_groups(path):
+def sort_groups(path: Path) -> tuple:
     """
     Unpack all folders in path and sort by extensions
-    :param path: user path -> Path()
     :return: new folders and files dict -> dict,
              known extensions list -> list,
              unknown extensions list -> list
@@ -52,7 +50,7 @@ def sort_groups(path):
         ext = str(file)[str(file).rfind('.')+1:]
         for folder, ext_list in EXTENSIONS.items():
             if ext.upper() in ext_list:
-                NEW_FOLDERS[folder].append(normalize(file, TRANSLIT))
+                NEW_FOLDERS[folder].append(normalize(file))
                 known_list.add(ext.upper())
                 break
             elif folder == 'unknown':
@@ -61,12 +59,9 @@ def sort_groups(path):
     return NEW_FOLDERS, list(known_list), list(unknown_list)
 
 
-def create_dirs(path, folders):
+def create_dirs(path: Path, folders: dict) -> None:
     """
     Create folders and move files
-    :param path: user path -> Path
-    :param folders: new folders and files dict -> dict
-    :return: None
     """
     for key, files in folders.items():
         new_folder = path / key
@@ -86,11 +81,9 @@ def create_dirs(path, folders):
             shutil.move(file, new_file)
 
 
-def unpacker(archive):
+def unpacker(archive: Path) -> Path:
     """
     Unpack archives
-    :param archive: archive path -> Path
-    :return: folder -> Path
     """
     name = archive
     suffixes = len(name.suffixes)
@@ -104,11 +97,9 @@ def unpacker(archive):
     return folder
 
 
-def delete_empty(path):
+def delete_empty(path: Path) -> None:
     """
     Delete empty folders
-    :param path: user path -> Path
-    :return: None
     """
     for item in path.glob('**/*'):
         if item.is_dir():
@@ -118,13 +109,9 @@ def delete_empty(path):
                 pass
 
 
-def readme(new_folders, known_list, unknown_list):
+def readme(new_folders: dict, known_list: list, unknown_list: list) -> None:
     """
     Create text file with results description
-    :param new_folders: new folders and files dict -> dict
-    :param known_list: known extensions list -> list,
-    :param unknown_list: unknown extensions list -> list
-    :return: None
     """
     path = Path(user_path) / 'SORT_RESULT.txt'
     with open(path, 'w') as result:
