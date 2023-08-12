@@ -1,10 +1,10 @@
-import re
 import shutil
 import sys
-from pathlib import Path
-from pyfiglet import Figlet
-from transliterate import get_translit_function
+import re
 from constants import NEW_FOLDERS, IGNORE_FOLDERS, EXTENSIONS
+from transliterate import get_translit_function
+from pyfiglet import Figlet
+from pathlib import Path
 
 
 f = Figlet(font='standard')
@@ -25,6 +25,9 @@ def normalize(path: Path) -> Path:
     file = path.name
     ext = file[file.rfind('.'):]
     normalized_file = file.removesuffix(ext)
+    if normalized_file[normalized_file.rfind('.')+1:].lower() == 'tar':
+        ext = file[normalized_file.rfind('.'):]
+        normalized_file = file.removesuffix(ext)
     normalized_file = re.sub(r'\W', '_', normalized_file)
     translit = get_translit_function('uk')
     normalized_file = translit(normalized_file, reversed=True)
