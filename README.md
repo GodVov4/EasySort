@@ -23,7 +23,7 @@ python -m pip install -r requirements.txt
 
 For example
 ```
-python sort.py C:\Users\Username\Desctop\Your_folder
+python sort.py C:\Users\Username\Desktop\Your_folder
 ```
 
 **4. Open** `SORT_RESULT` **in your folder.**
