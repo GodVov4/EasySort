@@ -1,9 +1,10 @@
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 from pyfiglet import Figlet
-from clean_folder.constants import NEW_FOLDERS, IGNORE_FOLDERS, EXTENSIONS, TRANSLIT
+from constants import NEW_FOLDERS, IGNORE_FOLDERS, EXTENSIONS, TRANSLIT
 
 
 f = Figlet(font='standard')
@@ -142,6 +143,12 @@ def readme(new_folders, known_list, unknown_list):
         result.write(f'* Unknown extensions: {unknown_list}.\n')
         result.write('\n* Your files have been transliterated.\n')
         result.write('\n\nProduced in Ukraine by Volodymyr Martyn.\n')
+    if sys.platform == 'darwin':
+        subprocess.run(['open', str(path)])
+    elif sys.platform == 'win32':
+        subprocess.run(['start', str(path)])
+    elif sys.platform == 'linux':
+        subprocess.run(['xdg-open', str(path)])
 
 
 def main():
@@ -149,7 +156,7 @@ def main():
     create_dirs(user_path, new_folders)
     delete_empty(user_path)
     readme(new_folders, known_list, unknown_list)
-    print('\nDone! Your files was sorted. Open "SORT_RESULT.txt" for see results.\n')
+    print('\nDone!\n')
 
 
 if __name__ == '__main__':
