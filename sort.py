@@ -1,4 +1,5 @@
 import shutil
+import subprocess
 import sys
 import re
 from constants import NEW_FOLDERS, IGNORE_FOLDERS, EXTENSIONS
@@ -132,6 +133,12 @@ def readme(new_folders: dict, known_list: list, unknown_list: list) -> None:
         result.write(f'* Unknown extensions: {unknown_list}.\n')
         result.write('\n* Your files have been transliterated.\n')
         result.write('\n\nProduced in Ukraine by Volodymyr Martyn.\n')
+    if sys.platform == 'darwin':
+        subprocess.run(['open', str(path)])
+    elif sys.platform == 'win32':
+        subprocess.run(['start', str(path)])
+    elif sys.platform == 'linux':
+        subprocess.run(['xdg-open', str(path)])
 
 
 def main():
