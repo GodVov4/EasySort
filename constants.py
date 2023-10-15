@@ -16,3 +16,7 @@ EXTENSIONS = {
     'archives': ['ZIP', 'GZ', 'TAR'],
     'unknown': []
 }
+
+known_list = set()
+unknown_list = set()
+only_folders = []
