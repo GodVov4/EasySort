@@ -1,21 +1,23 @@
+import argparse
+import re
 import shutil
 import subprocess
 import sys
-import re
-from constants import NEW_FOLDERS, IGNORE_FOLDERS, EXTENSIONS
-from transliterate import get_translit_function
-from pyfiglet import Figlet
-from pathlib import Path
 
+from pathlib import Path
+from pyfiglet import Figlet
+from transliterate import get_translit_function
+
+from constants import NEW_FOLDERS, IGNORE_FOLDERS, EXTENSIONS
 
 f = Figlet(font='standard')
-try:
-    user_path = Path(sys.argv[1])
-except IndexError:
-    print('You did\'t specify a folder path.\nTry again.')
-    exit()
+
+parser = argparse.ArgumentParser(description='EasySort')
+parser.add_argument('--source', '-s', help='Source folder', required=True)
+args = vars(parser.parse_args())
+user_path = Path(args.get('source'))
 if not user_path.exists():
-    print('Invalid folder.\nTry again.')
+    print('Invalid folder. Try again.')
     exit()
 
 
@@ -26,7 +28,7 @@ def normalize(path: Path) -> Path:
     file = path.name
     ext = file[file.rfind('.'):]
     normalized_file = file.removesuffix(ext)
-    if normalized_file[normalized_file.rfind('.')+1:].lower() == 'tar':
+    if normalized_file[normalized_file.rfind('.') + 1:].lower() == 'tar':
         ext = file[normalized_file.rfind('.'):]
         normalized_file = file.removesuffix(ext)
     normalized_file = re.sub(r'\W', '_', normalized_file)
@@ -51,7 +53,7 @@ def sort_groups(path: Path) -> tuple:
     for file in path.glob('**/*'):
         if file.is_dir() or not set(file.parts).isdisjoint(IGNORE_FOLDERS):
             continue
-        ext = str(file)[str(file).rfind('.')+1:]
+        ext = str(file)[str(file).rfind('.') + 1:]
         for folder, ext_list in EXTENSIONS.items():
             if ext.upper() in ext_list:
                 NEW_FOLDERS[folder].append(normalize(file))
