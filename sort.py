@@ -57,7 +57,7 @@ def find_extensions(path: Path) -> None:
                 break
 
 
-def create_dirs(path: Path, folders: dict) -> None:
+def create_dirs(path: Path, folders: dict[str, list[Path]]) -> None:
     """
     Create folders and move files
     """
@@ -89,7 +89,7 @@ def unpacker(archive: Path) -> Path:
     return folder
 
 
-def delete_empty(folders: list) -> None:
+def delete_empty(folders: list[Path]) -> None:
     """
     Delete empty folders
     """
@@ -102,7 +102,7 @@ def delete_empty(folders: list) -> None:
 
 
 
-def readme(path: Path, new_folders: dict, known: list, unknown: list) -> None:
+def readme(path: Path, new_folders: dict[str, list[Path]], known: list[str], unknown: list[str]) -> None:
     """
     Create text file with results description
     """
