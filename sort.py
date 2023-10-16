@@ -37,10 +37,9 @@ def normalize(path: Path) -> Path:
 
 
 def find_folders(path: Path) -> None:
-    for file in path.iterdir():
+    for file in path.glob('**/*'):
         if file.is_dir() and file.name not in IGNORE_FOLDERS:
             only_folders.append(file)
-            find_folders(file)
 
 
 def find_extensions(path: Path) -> None:
